@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+    name: parity
+    labels:
+        app: parity
+spec:
+    template: 
+        metadata:
+            labels:
+                app: parity
+            annotations:
+                scheduler.alpha.kubernetes.io/critical-pod: ''
+                scheduler.alpha.kubernetes.io/tolerations: '[{"key":"CriticalAddonsOnly", "operator":"Exists"}]'
+        spec:
+            serviceAccount: default
+            containers:
+            - name: parity
+              image: "parity/parity:stable-release"
+              imagePullPolicy: IfNotPresent
+              ports:
+              - containerPort: 8545
+              - containerPort: 30303
+              command: ["/parity/parity"]
+              args: ["--config", "/parity-config/config.toml"]
+              resources:
+                requests:
+                  cpu: 100m
+              volumeMounts:
+              - name: parity-data
+                mountPath: /var/parity
+			  livenessProbe:
+				httpGet:
+				  path: /
+				  port: 8545
+				initialDelaySeconds: 15
+				timeoutSeconds: 5
+			volumes:
+			- name: parity-data
+			  hostPath:
+				path: /var/parity  
