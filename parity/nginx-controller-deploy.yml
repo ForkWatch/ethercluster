@@ -1,0 +1,80 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  generation: 1
+  labels:
+    app: nginx-ingress
+    chart: nginx-ingress-0.11.2
+    component: controller
+    heritage: Tiller
+    release: nginx-ingress
+  name: nginx-ingress-controller
+  namespace: classic
+  resourceVersion: "231481"
+  selfLink: /apis/extensions/v1beta1/namespaces/classic/deployments/nginx-ingress-controller
+  uid: 1221c201-2d2f-11e8-9ebe-42010a8a0130
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nginx-ingress
+      component: controller
+      release: nginx-ingress
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: d77a33eb51112ed5d9c2f9ba5603ad5c77f979d1805666dd31520a7643aa14ab
+      labels:
+        app: nginx-ingress
+        component: controller
+        release: nginx-ingress
+    spec:
+      containers:
+      - args:
+        - /nginx-ingress-controller
+        - --default-backend-service=$(POD_NAMESPACE)/parity
+        - --election-id=ingress-controller-leader
+        - --ingress-class=nginx
+        - --configmap=$(POD_NAMESPACE)/nginx-ingress-controller
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.11.0
+        imagePullPolicy: IfNotPresent
+        name: nginx-ingress-controller
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 8545
+          name: rpc-port
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: nginx-ingress-mn
+      serviceAccountName: nginx-ingress-mn
+      terminationGracePeriodSeconds: 60

@@ -13,3 +13,4 @@ spec:
       port: 8545
       protocol: TCP
       targetPort: 8545
+    type: ClusterIP
