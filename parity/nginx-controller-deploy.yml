@@ -11,7 +11,7 @@ metadata:
     heritage: Tiller
     release: nginx-ingress
   name: nginx-ingress-controller
-  namespace: classic
+  namespace: parity 
   resourceVersion: "231481"
   selfLink: /apis/extensions/v1beta1/namespaces/classic/deployments/nginx-ingress-controller
   uid: 1221c201-2d2f-11e8-9ebe-42010a8a0130

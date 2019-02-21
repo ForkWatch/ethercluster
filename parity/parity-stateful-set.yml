@@ -2,7 +2,7 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
     name: parity
-    namespace: classic
+    namespace: parity 
     labels:
         app: parity
 spec:
@@ -14,7 +14,8 @@ spec:
     template:
         metadata:
             name: parity
-            labels: parity
+            labels: 
+                app: parity
         spec: 
             containers:
               - name: parity
