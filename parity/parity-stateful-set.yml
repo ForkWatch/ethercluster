@@ -1,52 +1,52 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-    name: parity
-    namespace: parity 
-    labels:
-        app: parity
+  name: parity
+  namespace: parity
+  labels:
+    app: parity
 spec:
-    replicas: 3
-    selector: 
-        matchLabels:
-            app: parity
-    serviceName: parity
-    template:
-        metadata:
-            name: parity
-            labels: 
-                app: parity
-        spec: 
-            containers:
-              - name: parity
-                image: "parity/parity:stable-release"
-                imagePullPolicy: IfNotPresent
-                command: ["/parity/parity"]
-                args: ["--config", "/parity-config/config.toml"]
-                ports:
-                  - containerPort: 8545
-                    protocol: TCP
-                    name: rpc-port
-                livenessProbe:
-                    tcpSocket:
-                        port: 8545
-                    initialDelaySeconds: 60
-                volumeMounts:
-                  - name: parity-config
-                    mountPath: /parity-config
-                    readOnly: true
-                  - name: parity-data
-                    mountPath: /parity-data
-            volumes:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: parity
+  serviceName: parity
+  template:
+    metadata:
+      name: parity
+      labels:
+        app: parity
+    spec:
+      containers:
+        - name: parity
+          image: "parity/parity:stable-release"
+          imagePullPolicy: IfNotPresent
+          command: ["/parity/parity"]
+          args: ["--config", "/parity-config/config.toml"]
+          ports:
+            - containerPort: 8545
+              protocol: TCP
+              name: rpc-port
+          livenessProbe:
+            tcpSocket:
+              port: 8545
+            initialDelaySeconds: 60
+          volumeMounts:
             - name: parity-config
-              secret:
-                secretName: parity-config
-    volumeClaimTemplates:
+              mountPath: /parity-config
+              readOnly: true
+            - name: parity-data
+              mountPath: /parity-data
+      volumes:
+      - name: parity-config
+        secret:
+          secretName: parity-config
+  volumeClaimTemplates:
     - metadata:
         name: parity-data
       spec:
         accessModes: ["ReadWriteOnce"]
         storageClassName: "classic-ssd"
         resources:
-            requests:
-                storage: 250Gi
+          requests:
+            storage: 50Gi

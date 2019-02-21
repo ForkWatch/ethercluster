@@ -1,6 +1,6 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: parity
+  labels:
     name: parity
-    labels:
-        name: parity
