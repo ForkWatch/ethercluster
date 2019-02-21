@@ -29,13 +29,13 @@ spec:
               volumeMounts:
               - name: parity-data
                 mountPath: /var/parity
-			  livenessProbe:
-				httpGet:
-				  path: /
-				  port: 8545
-				initialDelaySeconds: 15
-				timeoutSeconds: 5
-			volumes:
-			- name: parity-data
+                livenessProbe:
+                httpGet:
+                    path: /
+                    port: 8545
+                initialDelaySeconds: 15
+                timeoutSeconds: 5
+            volumes:
+		    - name: parity-data
 			  hostPath:
-				path: /var/parity  
+                path: /var/parity  
