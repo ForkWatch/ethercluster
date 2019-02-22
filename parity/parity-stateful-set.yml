@@ -19,10 +19,14 @@ spec:
     spec:
       containers:
         - name: parity
-          image: "parity/parity:stable-release"
+          image: "parity/parity:stable"
           imagePullPolicy: IfNotPresent
-          command: ["/parity/parity"]
-          args: ["--config", "/parity-config/config.toml"]
+          args:
+          - "--chain=classic"
+          - "--base-path=/parity-data"
+          - "--db-path=/parity-data/chains"
+          - "--keys-path=/parity-data/keys"
+          - "--interface=0.0.0.0"
           ports:
             - containerPort: 8545
               protocol: TCP
@@ -50,3 +54,11 @@ spec:
         resources:
           requests:
             storage: 50Gi
+   - metadata:
+       name: parity-config
+     spec:
+       accessModes: ["ReadOnlyMany"]
+       storageClassName: "classic-ssd"
+       resources:
+         requests:
+           storage: 1Gi
