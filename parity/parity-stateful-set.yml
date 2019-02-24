@@ -23,18 +23,10 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
           - "--chain=classic"
-          - "--base-path=/parity-data"
-          - "--db-path=/parity-data/chains"
-          - "--keys-path=/parity-data/keys"
-          - "--interface=0.0.0.0"
           ports:
             - containerPort: 8545
               protocol: TCP
               name: rpc-port
-          livenessProbe:
-            tcpSocket:
-              port: 8545
-            initialDelaySeconds: 60
           volumeMounts:
             - name: parity-config
               mountPath: /parity-config
@@ -54,11 +46,3 @@ spec:
         resources:
           requests:
             storage: 50Gi
-   - metadata:
-       name: parity-config
-     spec:
-       accessModes: ["ReadOnlyMany"]
-       storageClassName: "classic-ssd"
-       resources:
-         requests:
-           storage: 1Gi

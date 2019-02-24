@@ -36,6 +36,8 @@ Kubernetes Specification for Ethereum Classic and Ethereum Cluster Design.
 
 `kubectl create -f namespace.yml`
 
+`kubectl create configmap parity-config --from-file=./config/config.toml --namespace parity`
+
 `kubectl create -f storage-class-pd-ssd.yml`
 
 `kubectl create secret generic parity-config --namespace parity --from-file=config.toml=config/config.toml`
