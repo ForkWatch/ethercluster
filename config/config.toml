@@ -1,0 +1,16 @@
+[parity]
+chain = "classic"
+base_path = "/parity-data"
+db_path = "/parity-data/chains"
+keys_path = "/parity-data/keys"
+
+[ui]
+disable = true
+
+[rpc]
+disable = false
+port = 8545
+interface = "0.0.0.0"
+cors = "null"
+apis = ["web3", "eth", "net"]
+hosts = ["all"]
