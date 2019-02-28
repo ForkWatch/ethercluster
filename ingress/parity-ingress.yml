@@ -1,8 +1,8 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-    name: parity-ingress
-    namespace: parity
+    name: nginx-ingress-service
+    namespace: ingress-nginx
     annotations:
         nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -14,7 +14,7 @@ spec:
     - host: rpc.ethercluster.com 
       http:
         paths:
-        - path: /etcpath
+        - path: /
           backend:
-            serviceName: etc
-            servicePort: 80
+            serviceName: nginx-ingress-service 
+            servicePort: 8545
