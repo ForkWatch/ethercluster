@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: parity-ingress
+    namespace: parity
+    annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+    tls:
+    - hosts:
+      - rpc.ethercluster.com
+      secretName: tls-classic
+    rules:
+    - host: rpc.ethercluster.com 
+      http:
+        paths:
+        - path: /etcpath
+          backend:
+            serviceName: etc
+            servicePort: 80

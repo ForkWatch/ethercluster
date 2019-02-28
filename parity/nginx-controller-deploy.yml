@@ -75,6 +75,6 @@ spec:
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
-      serviceAccount: nginx-ingress-mn
-      serviceAccountName: nginx-ingress-mn
+      serviceAccount: nginx-ingress-classic
+      serviceAccountName: nginx-ingress-classic
       terminationGracePeriodSeconds: 60
