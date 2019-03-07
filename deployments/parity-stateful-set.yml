@@ -23,6 +23,13 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
           - "--chain=classic"
+          #- "--base-path=/parity-data"
+          #- "--db-path=/parity-data/chains" 
+          #- "--keys-path=/parity-data/keys"
+          - "--jsonrpc-port=8545"
+          - "--jsonrpc-interface=0.0.0.0"
+          - "--jsonrpc-apis=web3,eth,net"
+          - "--jsonrpc-hosts=all"
           ports:
             - containerPort: 8545
               protocol: TCP

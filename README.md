@@ -54,3 +54,24 @@ To generate SSL keys and certificates for deployment, run the following command:
 `kubectl create -f parity-ingress.yml`
 
 `./helm install --name nginx-ingress-classic stable/nginx-ingress --set rbac.create=true --namespace parity`
+
+## No NGINX Setup for Testing
+
+
+`kubectl create -f namespace.yml`
+
+`kubectl create configmap parity-config --from-file=./config/config.toml --namespace parity`
+
+`kubectl create -f storage-class-pd-ssd.yml`
+
+`kubectl create secret generic parity-config --namespace parity --from-file=config.toml=config/config.toml`
+
+Setup service to use LoadBalancer
+`kubectl create -f parity-service.yml`
+
+`kubectl create -f parity-stateful-set.yml`
+
+Test it with:
+```sh
+curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST <LOADBALANCER-IP>:8545
+```

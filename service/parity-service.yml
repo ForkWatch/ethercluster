@@ -9,8 +9,13 @@ spec:
   selector:
     app: parity
   ports:
+  - name: default
+    protocol: TCP
+    port: 80
+    targetPort: 80
   - name: rpc-endpoint
     port: 8545
     protocol: TCP
     targetPort: 8545
   type: ClusterIP
+  #type: LoadBalancer
