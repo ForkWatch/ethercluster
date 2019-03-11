@@ -5,6 +5,8 @@ metadata:
     app: parity
   name: parity
   namespace: parity
+  annotations:
+    cloud.google.com/app-protocols: '{"my-https-port":"HTTPS","my-http-port":"HTTP"}'
 spec:
   selector:
     app: parity
@@ -17,5 +19,8 @@ spec:
     port: 8545
     protocol: TCP
     targetPort: 8545
-  type: ClusterIP
-  #type: LoadBalancer
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  type: LoadBalancer
