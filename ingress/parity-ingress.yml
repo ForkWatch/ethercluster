@@ -9,10 +9,17 @@ metadata:
 spec:
     tls:
       secretName: tls-classic
+      hosts:
+        - www.ethercluster.com
     rules:
-    - http:
+    - host: www.ethercluster.com
+      http:
         paths:
-        - path: /*
+        - path: /
+          backend:
+            serviceName: web
+            servicePort: 8080
+        - path: /rpc
           backend:
             serviceName: parity 
             servicePort: 8545

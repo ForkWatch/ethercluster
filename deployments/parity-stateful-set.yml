@@ -6,7 +6,7 @@ metadata:
   labels:
     app: parity
 spec:
-  replicas: 1 
+  replicas: 3 
   selector:
     matchLabels:
       app: parity
@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
         - name: parity
-          image: "parity/parity:stable"
-          imagePullPolicy: IfNotPresent
+          image: "etccoop/parity:latest"
+          imagePullPolicy: Always
           args:
           - "--chain=classic"
           #- "--base-path=/parity-data"
@@ -34,6 +34,17 @@ spec:
             - containerPort: 8545
               protocol: TCP
               name: rpc-port
+            - containerPort: 443
+              protocol: TCP
+              name: https
+          readinessProbe:
+            exec:
+              command: ["python", "/etherhealth.py"]
+            initialDelaySeconds: 5
+          livenessProbe:
+            exec:
+              command: ["python", "/etherhealth.py"]
+            initialDelaySeconds: 5
           volumeMounts:
             - name: parity-config
               mountPath: /parity-config
