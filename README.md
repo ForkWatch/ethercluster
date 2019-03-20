@@ -53,9 +53,8 @@ To generate SSL keys and certificates for deployment, run the following command:
 
 `kubectl create -f parity-ingress.yml`
 
-`./helm install --name nginx-ingress-classic stable/nginx-ingress --set rbac.create=true --namespace parity`
 
-## No NGINX Setup for Testing
+## No SSL Setup for Testing
 
 
 `kubectl create -f namespace.yml`
