@@ -38,13 +38,13 @@ spec:
               protocol: TCP
               name: https
           readinessProbe:
-            exec:
-              command: ["python", "/etherhealth.py"]
-            initialDelaySeconds: 5
+            tcpSocket:
+              port: 8545
+            initialDelaySeconds: 650
           livenessProbe:
-            exec:
-              command: ["python", "/etherhealth.py"]
-            initialDelaySeconds: 5
+            tcpSocket:
+              port: 8545
+            initialDelaySeconds: 650
           volumeMounts:
             - name: parity-config
               mountPath: /parity-config
