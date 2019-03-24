@@ -5,6 +5,7 @@ metadata:
     namespace: parity
     annotations:
         kubernetes.io/ingress.global-static-ip-name: ethercluster-1
+        kubernetes.io/ingress.allow-http: "false"
 spec:
     tls:
       secretName: tls-classic
