@@ -4,7 +4,6 @@ metadata:
     name: ingress-parity
     namespace: parity
     annotations:
-        #nginx.ingress.kubernetes.io/rewrite-target: /
         kubernetes.io/ingress.global-static-ip-name: ethercluster-1
 spec:
     tls:

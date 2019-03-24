@@ -40,17 +40,31 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 8545
-            initialDelaySeconds: 650
+            initialDelaySeconds: 60
           livenessProbe:
             tcpSocket:
               port: 8545
-            initialDelaySeconds: 650
+            initialDelaySeconds: 60
           volumeMounts:
             - name: parity-config
               mountPath: /parity-config
               readOnly: true
             - name: parity-data
               mountPath: /parity-data
+        - name: liveness
+          image: "etccoop/liveness:latest"
+          imagePullPolicy: Always 
+          args:
+          - /go/src/liveness/liveness
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8545
+              httpHeaders:
+              - name: Custom-Header
+                value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
       volumes:
       - name: parity-config
         secret:
