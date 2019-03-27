@@ -1,0 +1,80 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: kotti 
+  namespace: parity 
+  labels:
+    app: kotti
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: kotti
+  serviceName: kotti
+  template:
+    metadata:
+      name: kotti
+      labels:
+        app: kotti
+    spec:
+      containers:
+        - name: parity
+          image: "etccoop/parity:latest"
+          imagePullPolicy: Always
+          args:
+          - "--chain=kotti"
+          #- "--base-path=/parity-data"
+          #- "--db-path=/parity-data/chains" 
+          #- "--keys-path=/parity-data/keys"
+          - "--jsonrpc-port=8545"
+          - "--jsonrpc-interface=0.0.0.0"
+          - "--jsonrpc-apis=web3,eth,net"
+          - "--jsonrpc-hosts=all"
+          ports:
+            - containerPort: 8545
+              protocol: TCP
+              name: rpc-port
+            - containerPort: 443
+              protocol: TCP
+              name: https
+          readinessProbe:
+            tcpSocket:
+              port: 8545
+            initialDelaySeconds: 60
+          livenessProbe:
+            tcpSocket:
+              port: 8545
+            initialDelaySeconds: 60
+          volumeMounts:
+            - name: kotti-config
+              mountPath: /kotti-config
+              readOnly: true
+            - name: kotti-data
+              mountPath: /kotti-data
+        - name: liveness
+          image: "etccoop/liveness:latest"
+          imagePullPolicy: Always 
+          args:
+          - /go/src/liveness/liveness
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8545
+              httpHeaders:
+              - name: Custom-Header
+                value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
+      volumes:
+      - name: kotti-config
+        secret:
+          secretName: kotti-config
+  volumeClaimTemplates:
+    - metadata:
+        name: kotti-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "kotti-ssd"
+        resources:
+          requests:
+            storage: 10Gi

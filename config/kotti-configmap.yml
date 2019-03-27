@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: kotti-config
+    namespace: parity
+data:
+    config.toml: |-
+        [parity]
+        chain = "kotti"
+        base_path = "/kotti-data"
+        db_path = "/kotti-data/chains"
+        keys_path = "/kotti-data/keys"
+
+        [ui]
+        disable = true
+
+        [rpc]
+        disable = false
+        port = 8545
+        interface = "0.0.0.0"
+        cors = "null"
+        apis = ["web3", "eth", "net"]
+        hosts = ["all"]
