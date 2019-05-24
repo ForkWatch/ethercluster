@@ -1,0 +1,10 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: classic-ssd
+  namespace: ethercluster 
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  zones: us-central1-a
+reclaimPolicy: Retain
