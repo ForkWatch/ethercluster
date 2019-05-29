@@ -6,7 +6,7 @@ metadata:
   labels:
     app: kotti
 spec:
-  replicas: 2 
+  replicas: 3 
   selector:
     matchLabels:
       app: kotti
@@ -52,23 +52,18 @@ spec:
             - name: kotti-data
               mountPath: /kotti-data
         - name: liveness
-          image: "etccoop/liveness:latest"
-          imagePullPolicy: Always 
-          args:
-          - /go/src/liveness/liveness
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8545
-              httpHeaders:
-              - name: Custom-Header
-                value: Awesome
-            initialDelaySeconds: 3
-            periodSeconds: 3
+          image: "yzhang1994/eth-node-checker"
+          imagePullPolicy: IfNotPresent
+          command: ["npm"]
+          args: ["start"]
+          env:
+            - name: "WEB3_URL"
+              value: "http://localhost:8545"
       volumes:
       - name: kotti-config
         secret:
           secretName: kotti-config
+      - name: kotti-data
   volumeClaimTemplates:
     - metadata:
         name: kotti-data
@@ -77,4 +72,4 @@ spec:
         storageClassName: "kotti-ssd"
         resources:
           requests:
-            storage: 10Gi
+            storage: 20Gi
