@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ethstats
+  namespace: ethercluster
+  labels:
+    app: ethstats
+spec:
+  type: LoadBalancer
+  selector:
+    app: ethstats
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
