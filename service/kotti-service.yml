@@ -4,7 +4,7 @@ metadata:
   labels:
     app: kotti 
   name: kotti
-  namespace: parity
+  namespace: ethercluster 
   annotations:
     cloud.google.com/app-protocols: '{"my-https-port":"HTTPS","my-http-port":"HTTP"}'
 spec:

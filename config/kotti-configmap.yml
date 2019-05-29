@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
     name: kotti-config
-    namespace: parity
+    namespace: ethercluster 
 data:
     config.toml: |-
         [parity]
