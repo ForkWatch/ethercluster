@@ -59,6 +59,23 @@ spec:
           env:
             - name: "WEB3_URL"
               value: "http://localhost:8545"
+        - name: ethnetintel
+          image: kairen/ethnetintel
+          env:
+          - name: NAME_PREFIX
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: WS_SERVER
+            value: "104.198.240.121:3000"
+          - name: WS_SECRET
+            value: "12qw34er"
+          - name: RPC_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: RPC_PORT
+            value: "8545"
       volumes:
       - name: kotti-config
         secret:
@@ -72,4 +89,4 @@ spec:
         storageClassName: "kotti-ssd"
         resources:
           requests:
-            storage: 20Gi
+            storage: 30Gi
