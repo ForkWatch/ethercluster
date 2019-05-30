@@ -1,21 +1,21 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: parity
-  namespace: parity
+  name: classic 
+  namespace: ethercluster
   labels:
-    app: parity
+    app: classic
 spec:
   replicas: 3 
   selector:
     matchLabels:
-      app: parity
-  serviceName: parity
+      app: classic
+  serviceName: classic
   template:
     metadata:
-      name: parity
+      name: classic
       labels:
-        app: parity
+        app: classic
     spec:
       containers:
         - name: parity
@@ -52,26 +52,37 @@ spec:
             - name: parity-data
               mountPath: /parity-data
         - name: liveness
-          image: "etccoop/liveness:latest"
-          imagePullPolicy: Always 
-          args:
-          - /go/src/liveness/liveness
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8545
-              httpHeaders:
-              - name: Custom-Header
-                value: Awesome
-            initialDelaySeconds: 3
-            periodSeconds: 3
+          image: "yzhang1994/eth-node-checker"
+          imagePullPolicy: IfNotPresent
+          command: ["npm"]
+          args: ["start"]
+          env:
+            - name: "WEB3_URL"
+              value: "http://localhost:8545"
+        - name: ethnetintel
+          image: kairen/ethnetintel
+          env:
+          - name: NAME_PREFIX
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: WS_SERVER
+            value: "104.198.240.121:3000"
+          - name: WS_SECRET
+            value: "12qw34er"
+          - name: RPC_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: RPC_PORT
+            value: "8545"
       volumes:
-      - name: parity-config
+      - name: classic-config
         secret:
-          secretName: parity-config
+          secretName: classic-config
   volumeClaimTemplates:
     - metadata:
-        name: parity-data
+        name: classic-data
       spec:
         accessModes: ["ReadWriteOnce"]
         storageClassName: "classic-ssd"
