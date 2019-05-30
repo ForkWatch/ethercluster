@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-    name: parity-config
-    namespace: parity
+    name: classic-config
+    namespace: ethercluster
 data:
     config.toml: |-
         [parity]

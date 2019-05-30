@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: parity
-  name: parity
-  namespace: parity
+    app: classic 
+  name: classic
+  namespace: ethercluster
   annotations:
     cloud.google.com/app-protocols: '{"my-https-port":"HTTPS","my-http-port":"HTTP"}'
 spec:
   selector:
-    app: parity
+    app: classic
   ports:
   - name: default
     protocol: TCP
