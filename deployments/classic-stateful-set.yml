@@ -46,11 +46,11 @@ spec:
               port: 8545
             initialDelaySeconds: 60
           volumeMounts:
-            - name: parity-config
-              mountPath: /parity-config
+            - name: classic-config
+              mountPath: /classic-config
               readOnly: true
-            - name: parity-data
-              mountPath: /parity-data
+            - name: classic-data
+              mountPath: /classic-data
         - name: liveness
           image: "yzhang1994/eth-node-checker"
           imagePullPolicy: IfNotPresent
