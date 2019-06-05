@@ -1,17 +1,17 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: ethstats
+  name: classic-stats
   namespace: ethercluster
   labels:
-    app: ethstats
+    app: classic-stats
 spec:
   replicas: 1
   template:
     metadata:
-      name: ethstats
+      name: classic-stats
       labels:
-        app: ethstats
+        app: classic-stats
     spec:
       containers:
       - name: ethstats

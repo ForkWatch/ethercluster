@@ -6,7 +6,7 @@ metadata:
   labels:
     app: kotti
 spec:
-  replicas: 3 
+  replicas: 2 
   selector:
     matchLabels:
       app: kotti
@@ -23,12 +23,12 @@ spec:
           imagePullPolicy: Always
           args:
           - "--chain=kotti"
-          #- "--base-path=/parity-data"
-          #- "--db-path=/parity-data/chains" 
-          #- "--keys-path=/parity-data/keys"
+          #- "--base-path=/kotti-data"
+          #- "--db-path=/kotti-data/chains" 
+          #- "--keys-path=/kotti-data/keys"
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
-          - "--jsonrpc-apis=web3,eth,net"
+          - "--jsonrpc-apis=web3,eth,net,rpc,parity"
           - "--jsonrpc-hosts=all"
           ports:
             - containerPort: 8545
@@ -38,13 +38,17 @@ spec:
               protocol: TCP
               name: https
           readinessProbe:
-            tcpSocket:
+            httpGet:
               port: 8545
-            initialDelaySeconds: 60
+              path: /api/health
+            initialDelaySeconds: 1800
+            periodSeconds: 60
           livenessProbe:
-            tcpSocket:
+            httpGet:
               port: 8545
-            initialDelaySeconds: 60
+              path: /api/health
+            initialDelaySeconds: 1800
+            periodSeconds: 60
           volumeMounts:
             - name: kotti-config
               mountPath: /kotti-config

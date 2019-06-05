@@ -4,20 +4,24 @@ metadata:
     name: ingress-ethercluster
     namespace: ethercluster
     annotations:
-        kubernetes.io/ingress.global-static-ip-name: ethercluster-1
+        kubernetes.io/ingress.global-static-ip-name: ethercluster-address
         kubernetes.io/ingress.allow-http: "false"
+        kubernetes.io/ingress.class: "gce"
 spec:
     tls:
-      secretName: tls-classic
-      hosts:
+      - hosts:
         - www.ethercluster.com
+        secretName: tls-classic
+    backend:
+      serviceName: ethercluster-site
+      servicePort: 8080
     rules:
     - host: www.ethercluster.com
       http:
         paths:
         - path: /
           backend:
-            serviceName: web
+            serviceName: ethercluster-site 
             servicePort: 8080
         - path: /etc
           backend:
@@ -27,3 +31,11 @@ spec:
           backend:
             serviceName: kotti
             servicePort: 8545
+        - path: /etc-stats
+          backend:
+            serviceName: classic-stats
+            servicePort: 3000
+        - path: /kotti-stats
+          backend:
+            serviceName: kotti-stats
+            servicePort: 3000

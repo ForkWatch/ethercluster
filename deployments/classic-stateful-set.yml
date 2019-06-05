@@ -23,12 +23,12 @@ spec:
           imagePullPolicy: Always
           args:
           - "--chain=classic"
-          #- "--base-path=/parity-data"
-          #- "--db-path=/parity-data/chains" 
-          #- "--keys-path=/parity-data/keys"
+          #- "--base-path=/classic-data"
+          #- "--db-path=/classic-data/chains" 
+          #- "--keys-path=/classic-data/keys"
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
-          - "--jsonrpc-apis=web3,eth,net"
+          - "--jsonrpc-apis=web3,eth,net,rpc,parity"
           - "--jsonrpc-hosts=all"
           ports:
             - containerPort: 8545
@@ -38,13 +38,16 @@ spec:
               protocol: TCP
               name: https
           readinessProbe:
-            tcpSocket:
+            httpGet:
               port: 8545
-            initialDelaySeconds: 60
+              path: /api/health
+            initialDelaySeconds: 9000 
+            periodSeconds: 1800
           livenessProbe:
             tcpSocket:
               port: 8545
-            initialDelaySeconds: 60
+            initialDelaySeconds: 9000
+            periodSeconds: 1800
           volumeMounts:
             - name: classic-config
               mountPath: /classic-config

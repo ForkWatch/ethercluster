@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kotti-stats
+  namespace: ethercluster
+  labels:
+    app: kotti-stats
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: kotti-stats
+      labels:
+        app: kotti-stats
+    spec:
+      containers:
+      - name: ethstats
+        image: kairen/ethstats
+        env:
+        - name: WS_SECRET
+          value: "12qw34er"
+        ports:
+        - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 120
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          timeoutSeconds: 5
