@@ -17,15 +17,19 @@ spec:
       labels:
         app: kotti
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: parity
           image: "etccoop/parity:latest"
           imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
           args:
           - "--chain=kotti"
-          #- "--base-path=/kotti-data"
-          #- "--db-path=/kotti-data/chains" 
-          #- "--keys-path=/kotti-data/keys"
+          - "--base-path=/kotti-data"
+          - "--db-path=/kotti-data/chains" 
+          - "--keys-path=/kotti-data/keys"
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"

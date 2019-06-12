@@ -17,19 +17,27 @@ spec:
       labels:
         app: classic
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: parity
           image: "etccoop/parity:latest"
           imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
           args:
           - "--chain=classic"
-          #- "--base-path=/classic-data"
-          #- "--db-path=/classic-data/chains" 
-          #- "--keys-path=/classic-data/keys"
+          - "--base-path=/classic-data"
+          - "--db-path=/classic-data/chains" 
+          - "--keys-path=/classic-data/keys"
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
           - "--jsonrpc-hosts=all"
+          - "--no-ancient-blocks"
+          - "--no-serve-light"
+          - "--max-peers=250"
+          - "--snapshot-peers=50"
           ports:
             - containerPort: 8545
               protocol: TCP
