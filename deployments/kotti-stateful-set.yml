@@ -21,7 +21,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "etccoop/parity:latest"
+          image: "parity/parity:v2.5.2-beta"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
@@ -59,14 +59,6 @@ spec:
               readOnly: true
             - name: kotti-data
               mountPath: /kotti-data
-        - name: liveness
-          image: "yzhang1994/eth-node-checker"
-          imagePullPolicy: IfNotPresent
-          command: ["npm"]
-          args: ["start"]
-          env:
-            - name: "WEB3_URL"
-              value: "http://localhost:8545"
         - name: ethnetintel
           image: kairen/ethnetintel
           env:
