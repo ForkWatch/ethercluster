@@ -1,0 +1,104 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: morden 
+  namespace: ethercluster
+  labels:
+    app: morden
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: morden
+  serviceName: morden
+  template:
+    metadata:
+      name: morden
+      labels:
+        app: morden
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: parity
+          image: "parity/parity:v2.5.2-beta"
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+          args:
+          - "--chain=morden"
+          - "--base-path=/morden-data"
+          - "--db-path=/morden-data/chains" 
+          - "--keys-path=/morden-data/keys"
+          - "--jsonrpc-port=8545"
+          - "--jsonrpc-interface=0.0.0.0"
+          - "--jsonrpc-apis=web3,eth,net,rpc,parity"
+          - "--jsonrpc-hosts=all"
+          - "--warp" 
+          - "--no-ancient-blocks" 
+          - "--no-serve-light" 
+          - "--max-peers=250" 
+          - "--snapshot-peers=50"
+          ports:
+            - containerPort: 8545
+              protocol: TCP
+              name: rpc-port
+            - containerPort: 443
+              protocol: TCP
+              name: https
+          #readinessProbe:
+          #  httpGet:
+          #    port: 8545
+          #    path: /api/health
+          #  initialDelaySeconds: 9000 
+          #  periodSeconds: 1800
+          #livenessProbe:
+          #  httpGet:
+          #    port: 8545
+          #    path: /api/health
+          #  initialDelaySeconds: 9000
+          #  periodSeconds: 1800
+          volumeMounts:
+            - name: morden-config
+              mountPath: /morden-config
+              readOnly: true
+            - name: morden-data
+              mountPath: /morden-data
+        #- name: liveness
+        #  image: "yzhang1994/eth-node-checker"
+        #  imagePullPolicy: IfNotPresent
+        #  command: ["npm"]
+        #  args: ["start"]
+        #  env:
+        #   - name: "WEB3_URL"
+        #     value:  "http://localhost:8545"
+        - name: ethnetintel
+          image: kairen/ethnetintel
+          env:
+          - name: NAME_PREFIX
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: WS_SERVER
+            value: "104.198.240.121:3000"
+          - name: WS_SECRET
+            value: "12qw34er"
+          - name: RPC_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: RPC_PORT
+            value: "8545"
+      volumes:
+      - name: morden-config
+        secret:
+          secretName: morden-config
+  volumeClaimTemplates:
+    - metadata:
+        name: morden-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "morden-ssd"
+        resources:
+          requests:
+            storage: 30Gi

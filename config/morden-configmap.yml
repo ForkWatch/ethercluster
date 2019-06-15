@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: morden-config
+    namespace: ethercluster 
+data:
+    config.toml: |-
+        [parity]
+        chain = "morden"
+        base_path = "/morden-data"
+        db_path = "/morden-data/chains"
+        keys_path = "/morden-data/keys"
+
+        [ui]
+        disable = true
+
+        [rpc]
+        disable = false
+        port = 8545
+        interface = "0.0.0.0"
+        cors = "null"
+        apis = ["web3", "eth", "net"]
+        hosts = ["all"]
