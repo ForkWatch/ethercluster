@@ -78,7 +78,7 @@ spec:
           - name: RPC_PORT
             value: "8545"
     volumes:
-      - name: kotti-data
+      - name: classic-data
   volumeClaimTemplates:
     - metadata:
         name: classic-data
