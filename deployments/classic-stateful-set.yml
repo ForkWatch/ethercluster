@@ -25,7 +25,8 @@ spec:
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
-          args:
+          command: ["/parity/parity"]
+          args: 
           - "--chain=classic"
           - "--base-path=/classic-data"
           - "--db-path=/classic-data/chains" 
@@ -57,9 +58,6 @@ spec:
             initialDelaySeconds: 9000
             periodSeconds: 1800
           volumeMounts:
-            - name: classic-config
-              mountPath: /classic-config
-              readOnly: true
             - name: classic-data
               mountPath: /classic-data
         - name: ethnetintel
@@ -79,10 +77,8 @@ spec:
                 fieldPath: status.podIP
           - name: RPC_PORT
             value: "8545"
-      volumes:
-      - name: classic-config
-        secret:
-          secretName: classic-config
+    volumes:
+      - name: kotti-data
   volumeClaimTemplates:
     - metadata:
         name: classic-data
