@@ -57,7 +57,7 @@ spec:
             - name: kotti-data
               mountPath: /kotti-data
         - name: ethnetintel
-          image: kairen/ethnetintel
+          image: etccoop/ethnetintel
           env:
           - name: NAME_PREFIX
             valueFrom:

@@ -34,6 +34,7 @@ spec:
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
+          - "--jsonrpc-cors=all"
           - "--jsonrpc-hosts=all"
           - "--no-ancient-blocks"
           - "--no-serve-light"
@@ -61,7 +62,7 @@ spec:
             - name: classic-data
               mountPath: /classic-data
         - name: ethnetintel
-          image: kairen/ethnetintel
+          image: etccoop/ethnetintel
           env:
           - name: NAME_PREFIX
             valueFrom:

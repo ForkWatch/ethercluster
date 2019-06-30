@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: ethstats
-        image: kairen/ethstats
+        image: etccoop/ethstats
         env:
         - name: WS_SECRET
           value: "12qw34er"
