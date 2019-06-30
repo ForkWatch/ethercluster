@@ -6,7 +6,7 @@ metadata:
   labels:
     app: classic
 spec:
-  replicas: 3 
+  replicas: 4 
   selector:
     matchLabels:
       app: classic
@@ -21,7 +21,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "parity/parity:v2.5.2-beta"
+          image: "parity/parity:v2.5.3-beta"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
