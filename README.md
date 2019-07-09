@@ -1,4 +1,5 @@
 # Ethercluster
+![Ethercluster-logo](assets/Ethercluster_PNG.png ':size=450x200')
 
 Ethercluster is an Ethereum-based node infrastructure design and specification that allows anyone to build easily scalable dapp infra without relying on third-party endpoints.
 It uses the latest cutting-edge infra-as-code technology found in dev-ops, such as Terraform, Kubernetes, and Docker.
