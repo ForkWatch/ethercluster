@@ -1,76 +1,20 @@
-# Kubernetes Ethercluster Files
+# Ethercluster
+![Ethercluster-logo](assets/Ethercluster_PNG.png ':size=450x200')
 
-Kubernetes Specification for Ethereum Classic and Ethereum Cluster Design.
+Ethercluster is an Ethereum-based node infrastructure design and specification that allows anyone to build easily scalable dapp infra without relying on third-party endpoints.
+It uses the latest cutting-edge infra-as-code technology found in dev-ops, such as Terraform, Kubernetes, and Docker.
 
+* To checkout the complete docs and guides of the project, click [here](https://docs.ethercluster.com).
+* To see a working live version of Ethercluster for the Ethereum Classic (ETC) and Kotti networks, click [here](https://www.ethercluster.com).
+* To learn more about our motivations for the project, checkout our Medium [post](https://medium.com/ethereum-classic/ethercluster-an-open-source-alternative-to-infura-b8799b2122d3).
 
-## Google Cloud Kubernetes Engine Initialization
+## Getting Started
 
-`gcloud config set compute/zone us-central1-f`
+To get started, [fork](https://help.github.com/articles/fork-a-repo/) or [duplicate](https://help.github.com/articles/duplicating-a-repository/) the repository. Then edit this file and delete everything above this line.
 
-`gcloud container clusters create <CLUSTERNAME> --num-nodes 2 --machine-type n1-standard-2 --scopes "https://www.googleapis.com/auth/projecthosting,cloud-platform"`
+---
 
-`gcloud container clusters list`
+### Contributing
 
-`gcloud container clusters get-credentials <CLUSTERNAME>`
+How to contribute, build and release are outlined in [CONTRIBUTING.md](CONTRIBUTING.md), [BUILDING.md](BUILDING.md) and [RELEASING.md](RELEASING.md) respectively. Commits in this repository follow the [CONVENTIONAL_COMMITS.md](CONVENTIONAL_COMMITS.md) specification.
 
-`kubectl cluster-info`
-
-`wget https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz`
-
-`tar zxfv helm-v2.9.1-linux-amd64.tar.gz`
-
-`cp linux-amd64/helm .`
-
-`kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)`
-
-`kubectl create serviceaccount tiller --namespace kube-system`
-
-`kubectl create clusterrolebinding tiller-admin-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller`
-
-```
-./helm init --service-account=tiller
-./helm update
-```
-
-## Kubernetes Cluster Initialization
-
-`kubectl create -f namespace.yml`
-
-`kubectl create configmap parity-config --from-file=./config/config.toml --namespace parity`
-
-`kubectl create -f storage-class-pd-ssd.yml`
-
-`kubectl create secret generic parity-config --namespace parity --from-file=config.toml=config/config.toml`
-
-To generate SSL keys and certificates for deployment, run the following command:
-`openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ethercluster-key.key -out ethercluster-bundle.crt -subj “/CN=${HOST}/O=${HOST}”`
-
-`kubectl create secret tls tls-classic --key ./config/ethercluster-key.key --cert ./config/ethercluster-bundle.crt --namespace parity`
-
-`kubectl create -f parity-stateful-set.yml`
-
-`kubectl create -f parity-service.yml`
-
-`kubectl create -f parity-ingress.yml`
-
-
-## No SSL Setup for Testing
-
-
-`kubectl create -f namespace.yml`
-
-`kubectl create configmap parity-config --from-file=./config/config.toml --namespace parity`
-
-`kubectl create -f storage-class-pd-ssd.yml`
-
-`kubectl create secret generic parity-config --namespace parity --from-file=config.toml=config/config.toml`
-
-Setup service to use LoadBalancer
-`kubectl create -f parity-service.yml`
-
-`kubectl create -f parity-stateful-set.yml`
-
-Test it with:
-```sh
-curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST <LOADBALANCER-IP>:8545
-```
