@@ -10,6 +10,10 @@ data:
         base_path = "/parity-data"
         db_path = "/parity-data/chains"
         keys_path = "/parity-data/keys"
+        max-peers = 250
+        snapshot-peers = 50
+        no-ancient-blocks = true
+        no-serve-light = true
 
         [ui]
         disable = true
@@ -19,5 +23,5 @@ data:
         port = 8545
         interface = "0.0.0.0"
         cors = "null"
-        apis = ["web3", "eth", "net"]
+        apis = ["web3", "eth", "net", "rpc", "parity"]
         hosts = ["all"]
