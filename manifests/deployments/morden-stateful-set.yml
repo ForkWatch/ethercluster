@@ -21,7 +21,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "parity/parity:v2.5.2-beta"
+          image: "etccoop/parity-morden:latest"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
@@ -34,7 +34,7 @@ spec:
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
           - "--jsonrpc-hosts=all"
-          - "--warp" 
+          - "--reserved-peers=/morden_reserved.txt"
           - "--no-ancient-blocks" 
           - "--no-serve-light" 
           - "--max-peers=250" 
