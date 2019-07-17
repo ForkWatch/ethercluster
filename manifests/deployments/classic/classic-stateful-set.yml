@@ -1,39 +1,45 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: kotti 
-  namespace: ethercluster 
+  name: classic 
+  namespace: ethercluster
   labels:
-    app: kotti
+    app: classic
 spec:
-  replicas: 2 
+  replicas: 4 
   selector:
     matchLabels:
-      app: kotti
-  serviceName: kotti
+      app: classic
+  serviceName: classic
   template:
     metadata:
-      name: kotti
+      name: classic
       labels:
-        app: kotti
+        app: classic
     spec:
       securityContext:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "parity/parity:v2.5.2-beta"
+          image: "parity/parity:v2.5.3-beta"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
-          args:
-          - "--chain=kotti"
-          - "--base-path=/kotti-data"
-          - "--db-path=/kotti-data/chains" 
-          - "--keys-path=/kotti-data/keys"
+          command: ["/parity/parity"]
+          args: 
+          - "--chain=classic"
+          - "--base-path=/classic-data"
+          - "--db-path=/classic-data/chains" 
+          - "--keys-path=/classic-data/keys"
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
+          - "--jsonrpc-cors=all"
           - "--jsonrpc-hosts=all"
+          - "--no-ancient-blocks"
+          - "--no-serve-light"
+          - "--max-peers=250"
+          - "--snapshot-peers=50"
           ports:
             - containerPort: 8545
               protocol: TCP
@@ -45,17 +51,17 @@ spec:
             httpGet:
               port: 8545
               path: /api/health
-            initialDelaySeconds: 1800
-            periodSeconds: 60
+            initialDelaySeconds: 9000 
+            periodSeconds: 1800
           livenessProbe:
-            httpGet:
+            tcpSocket:
               port: 8545
               path: /api/health
-            initialDelaySeconds: 1800
-            periodSeconds: 60
+            initialDelaySeconds: 9000
+            periodSeconds: 1800
           volumeMounts:
-            - name: kotti-data
-              mountPath: /kotti-data
+            - name: classic-data
+              mountPath: /classic-data
         - name: ethnetintel
           image: etccoop/ethnetintel
           env:
@@ -64,23 +70,23 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
           - name: WS_SERVER
-            value: "104.198.240.121:3000"
+            value: {{wsserver}}
           - name: WS_SECRET
-            value: "12qw34er"
+            value: {{wssecret}}
           - name: RPC_HOST
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
           - name: RPC_PORT
             value: "8545"
-      volumes:
-      - name: kotti-data
+    volumes:
+      - name: classic-data
   volumeClaimTemplates:
     - metadata:
-        name: kotti-data
+        name: classic-data
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: "kotti-ssd"
+        storageClassName: "classic-ssd"
         resources:
           requests:
-            storage: 30Gi
+            storage: 50Gi

@@ -1,24 +1,24 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: classic-stats
+  name: moden-stats
   namespace: ethercluster
   labels:
-    app: classic-stats
+    app: morden-stats
 spec:
   replicas: 1
   template:
     metadata:
-      name: classic-stats
+      name: morden-stats
       labels:
-        app: classic-stats
+        app: morden-stats
     spec:
       containers:
       - name: ethstats
-        image: etccoop/ethstats
+        image: kairen/ethstats
         env:
         - name: WS_SECRET
-          value: "12qw34er"
+          value: {{wssecret}} 
         ports:
         - containerPort: 3000
         livenessProbe:

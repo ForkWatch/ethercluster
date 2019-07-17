@@ -1,44 +1,43 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: classic 
+  name: morden 
   namespace: ethercluster
   labels:
-    app: classic
+    app: morden
 spec:
-  replicas: 4 
+  replicas: 2
   selector:
     matchLabels:
-      app: classic
-  serviceName: classic
+      app: morden
+  serviceName: morden
   template:
     metadata:
-      name: classic
+      name: morden
       labels:
-        app: classic
+        app: morden
     spec:
       securityContext:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "parity/parity:v2.5.3-beta"
+          image: "etccoop/parity-morden:latest"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
-          command: ["/parity/parity"]
-          args: 
-          - "--chain=classic"
-          - "--base-path=/classic-data"
-          - "--db-path=/classic-data/chains" 
-          - "--keys-path=/classic-data/keys"
+          args:
+          - "--chain=morden"
+          - "--base-path=/morden-data"
+          - "--db-path=/morden-data/chains" 
+          - "--keys-path=/morden-data/keys"
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
-          - "--jsonrpc-cors=all"
           - "--jsonrpc-hosts=all"
-          - "--no-ancient-blocks"
-          - "--no-serve-light"
-          - "--max-peers=250"
+          - "--reserved-peers=/morden_reserved.txt"
+          - "--no-ancient-blocks" 
+          - "--no-serve-light" 
+          - "--max-peers=250" 
           - "--snapshot-peers=50"
           ports:
             - containerPort: 8545
@@ -54,39 +53,39 @@ spec:
             initialDelaySeconds: 9000 
             periodSeconds: 1800
           livenessProbe:
-            tcpSocket:
+            httpGet:
               port: 8545
               path: /api/health
             initialDelaySeconds: 9000
             periodSeconds: 1800
           volumeMounts:
-            - name: classic-data
-              mountPath: /classic-data
+            - name: morden-data
+              mountPath: /morden-data
         - name: ethnetintel
-          image: etccoop/ethnetintel
+          image: kairen/ethnetintel
           env:
           - name: NAME_PREFIX
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
           - name: WS_SERVER
-            value: "104.198.240.121:3000"
+            value: {{wsserver}}
           - name: WS_SECRET
-            value: "12qw34er"
+            value: {{wssecret}}
           - name: RPC_HOST
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
           - name: RPC_PORT
             value: "8545"
-    volumes:
-      - name: classic-data
+      volumes:
+      - name: morden-data
   volumeClaimTemplates:
     - metadata:
-        name: classic-data
+        name: morden-data
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: "classic-ssd"
+        storageClassName: "morden-ssd"
         resources:
           requests:
-            storage: 50Gi
+            storage: 30Gi

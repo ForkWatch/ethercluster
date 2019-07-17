@@ -1,44 +1,39 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: morden 
-  namespace: ethercluster
+  name: kotti 
+  namespace: ethercluster 
   labels:
-    app: morden
+    app: kotti
 spec:
-  replicas: 2
+  replicas: 2 
   selector:
     matchLabels:
-      app: morden
-  serviceName: morden
+      app: kotti
+  serviceName: kotti
   template:
     metadata:
-      name: morden
+      name: kotti
       labels:
-        app: morden
+        app: kotti
     spec:
       securityContext:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "etccoop/parity-morden:latest"
+          image: "parity/parity:v2.5.2-beta"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
           args:
-          - "--chain=morden"
-          - "--base-path=/morden-data"
-          - "--db-path=/morden-data/chains" 
-          - "--keys-path=/morden-data/keys"
+          - "--chain=kotti"
+          - "--base-path=/kotti-data"
+          - "--db-path=/kotti-data/chains" 
+          - "--keys-path=/kotti-data/keys"
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
           - "--jsonrpc-hosts=all"
-          - "--reserved-peers=/morden_reserved.txt"
-          - "--no-ancient-blocks" 
-          - "--no-serve-light" 
-          - "--max-peers=250" 
-          - "--snapshot-peers=50"
           ports:
             - containerPort: 8545
               protocol: TCP
@@ -50,28 +45,28 @@ spec:
             httpGet:
               port: 8545
               path: /api/health
-            initialDelaySeconds: 9000 
-            periodSeconds: 1800
+            initialDelaySeconds: 1800
+            periodSeconds: 60
           livenessProbe:
             httpGet:
               port: 8545
               path: /api/health
-            initialDelaySeconds: 9000
-            periodSeconds: 1800
+            initialDelaySeconds: 1800
+            periodSeconds: 60
           volumeMounts:
-            - name: morden-data
-              mountPath: /morden-data
+            - name: kotti-data
+              mountPath: /kotti-data
         - name: ethnetintel
-          image: kairen/ethnetintel
+          image: etccoop/ethnetintel
           env:
           - name: NAME_PREFIX
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
           - name: WS_SERVER
-            value: "104.198.240.121:3000"
+            value: {{wsserver}} 
           - name: WS_SECRET
-            value: "12qw34er"
+            value: {{wssecret}}
           - name: RPC_HOST
             valueFrom:
               fieldRef:
@@ -79,13 +74,13 @@ spec:
           - name: RPC_PORT
             value: "8545"
       volumes:
-      - name: morden-data
+      - name: kotti-data
   volumeClaimTemplates:
     - metadata:
-        name: morden-data
+        name: kotti-data
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: "morden-ssd"
+        storageClassName: "kotti-ssd"
         resources:
           requests:
             storage: 30Gi
