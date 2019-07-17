@@ -64,9 +64,12 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
           - name: WS_SERVER
-            value: {{wsserver}} 
+            value: kotti-stats.dcp 
           - name: WS_SECRET
-            value: {{wssecret}}
+            valueFrom:
+              secretKeyRef:
+                name: kotti-stats
+                key: WS_SECRET
           - name: RPC_HOST
             valueFrom:
               fieldRef:

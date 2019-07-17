@@ -69,9 +69,12 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
           - name: WS_SERVER
-            value: {{wsserver}}
+            value: morden-stats.dcp 
           - name: WS_SECRET
-            value: {{wssecret}}
+            valueFrom:
+              secretKeyRef:
+                name: morden-stats
+                key: WS_SECRET
           - name: RPC_HOST
             valueFrom:
               fieldRef:

@@ -70,9 +70,12 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
           - name: WS_SERVER
-            value: {{wsserver}}
+            value: classic-stats.dcp
           - name: WS_SECRET
-            value: {{wssecret}}
+            valueFrom:
+              secretKeyRef:
+                name: classic-stats
+                key: WS_SECRET
           - name: RPC_HOST
             valueFrom:
               fieldRef:

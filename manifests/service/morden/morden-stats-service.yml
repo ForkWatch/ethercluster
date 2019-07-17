@@ -6,10 +6,9 @@ metadata:
   labels:
     app: morden-stats
 spec:
-  type: LoadBalancer
+  type: ClusterIP 
   selector:
     app: morden-stats
   ports:
-  - port: 3000
-    protocol: TCP
+  - port: 80
     targetPort: 3000
