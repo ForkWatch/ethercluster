@@ -1,24 +1,24 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: kotti-stats
+  name: classic-stats
   namespace: ethercluster
   labels:
-    app: kotti-stats
+    app: classic-stats
 spec:
   replicas: 1
   template:
     metadata:
-      name: kotti-stats
+      name: classic-stats
       labels:
-        app: kotti-stats
+        app: classic-stats
     spec:
       containers:
       - name: ethstats
         image: etccoop/ethstats
         env:
         - name: WS_SECRET
-          value: "12qw34er"
+          value: {{wssecret}}
         ports:
         - containerPort: 3000
         livenessProbe:

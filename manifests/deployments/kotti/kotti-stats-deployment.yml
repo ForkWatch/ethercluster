@@ -1,24 +1,24 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: moden-stats
+  name: kotti-stats
   namespace: ethercluster
   labels:
-    app: morden-stats
+    app: kotti-stats
 spec:
   replicas: 1
   template:
     metadata:
-      name: morden-stats
+      name: kotti-stats
       labels:
-        app: morden-stats
+        app: kotti-stats
     spec:
       containers:
       - name: ethstats
-        image: kairen/ethstats
+        image: etccoop/ethstats
         env:
         - name: WS_SECRET
-          value: "12qw34er"
+          value: {{wssecret}} 
         ports:
         - containerPort: 3000
         livenessProbe:
