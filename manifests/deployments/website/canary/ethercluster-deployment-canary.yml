@@ -1,0 +1,23 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ethercluster-site-canary
+  namespace: ethercluster
+  labels:
+    app: ethercluster-site
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: ethercluster-site-canary
+  template:
+    metadata:
+      labels:
+        app: ethercluster-site-canary
+    spec:
+      containers:
+      - name: ethercluster-site
+        image: etccoop/ethercluster-site:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
