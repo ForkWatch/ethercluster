@@ -5,6 +5,7 @@ metadata:
   namespace: ethercluster
   labels:
     app: ethercluster-site
+    track: canary
 spec:
   replicas: 1 
   selector:
