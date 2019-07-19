@@ -7,6 +7,10 @@ metadata:
     app: morden-stats
 spec:
   replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: morden-stats
   template:
     metadata:
       name: morden-stats
@@ -15,20 +19,13 @@ spec:
     spec:
       containers:
       - name: ethstats
-        image: kairen/ethstats
+        image: ethereumex/eth-stats-dashboard:latest
+        imagePullPolicy: IfNotPresent
         env:
         - name: WS_SECRET
-          value: {{wssecret}} 
+          valueFrom:
+            secretKeyRef:
+              name: morden-stats
+              key: WS_SECRET
         ports:
         - containerPort: 3000
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 120
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          timeoutSeconds: 5

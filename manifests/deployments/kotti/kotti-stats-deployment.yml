@@ -7,6 +7,10 @@ metadata:
     app: kotti-stats
 spec:
   replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: kotti-stats
   template:
     metadata:
       name: kotti-stats
@@ -18,17 +22,9 @@ spec:
         image: etccoop/ethstats
         env:
         - name: WS_SECRET
-          value: {{wssecret}} 
+          valueFrom:
+            secretKeyRef:
+              name: kotti-stats
+              key: WS_SECRET
         ports:
         - containerPort: 3000
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 120
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          timeoutSeconds: 5
