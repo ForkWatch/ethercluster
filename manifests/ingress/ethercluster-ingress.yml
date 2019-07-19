@@ -31,11 +31,19 @@ spec:
           backend:
             serviceName: kotti
             servicePort: 8545
+        - path: /morden
+          backend:
+            serviceName: morden
+            servicePort: 8545
         - path: /etc-stats
           backend:
             serviceName: classic-stats
-            servicePort: 3000
+            servicePort: 80
         - path: /kotti-stats
           backend:
             serviceName: kotti-stats
-            servicePort: 3000
+            servicePort: 80
+        - path: /morden-stats
+          backend:
+            serviceName: morden-stats
+            servicePort: 80
