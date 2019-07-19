@@ -1,0 +1,4 @@
+def project = "$GCP_PROJECT_ID"
+def appName = 'ethercluster-site'
+def feSvcName = "${appName}"
+def imageTag = "registry.hub.docker.com/etccoop/${appName}:latest"
