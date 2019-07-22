@@ -40,10 +40,17 @@ spec:
           - "--no-serve-light"
           - "--max-peers=250"
           - "--snapshot-peers=50"
+          - "--ws-interface=0.0.0.0"
+          - "--ws-apis=web3,eth,net,rpc,parity"
+          - "--ws-origins=all"
+          - "--ws-hosts=all"
           ports:
             - containerPort: 8545
               protocol: TCP
               name: rpc-port
+            - containerPort: 8546
+              protocol: TCP
+              name: ws-port
             - containerPort: 443
               protocol: TCP
               name: https
