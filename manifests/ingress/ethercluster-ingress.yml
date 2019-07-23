@@ -48,7 +48,7 @@ spec:
           backend:
             serviceName: morden-stats
             servicePort: 80
-        - path: /ws-classic
+        - path: /ws-etc
           backend:
             serviceName: classic
             servicePort: 8546
