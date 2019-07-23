@@ -19,6 +19,10 @@ spec:
     port: 8545
     protocol: TCP
     targetPort: 8545
+  - name: ws-endpoint
+    port: 8546
+    protocol: TCP
+    targetPort: 8546
   - name: https
     port: 443
     protocol: TCP

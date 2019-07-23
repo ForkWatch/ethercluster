@@ -7,6 +7,7 @@ metadata:
         kubernetes.io/ingress.global-static-ip-name: ethercluster-address
         kubernetes.io/ingress.allow-http: "false"
         kubernetes.io/ingress.class: "gce"
+        nginx.org/websocket-services: "ws-svc"
 spec:
     tls:
       - hosts:
@@ -47,3 +48,15 @@ spec:
           backend:
             serviceName: morden-stats
             servicePort: 80
+        - path: /ws-etc
+          backend:
+            serviceName: classic
+            servicePort: 8546
+        - path: /ws-kotti
+          backend:
+            serviceName: kotti
+            servicePort: 8546
+        - path: /ws-morden
+          backend:
+            serviceName: morden
+            servicePort: 8546
