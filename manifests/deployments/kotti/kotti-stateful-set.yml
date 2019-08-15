@@ -34,6 +34,7 @@ spec:
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
           - "--jsonrpc-hosts=all"
+          - "--jsonrpc-cors=all"
           - "--ws-interface=0.0.0.0" 
           - "--ws-apis=web3,eth,net,rpc,parity"
           - "--ws-origins=all" 
