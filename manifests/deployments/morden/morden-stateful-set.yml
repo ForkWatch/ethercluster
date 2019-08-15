@@ -34,6 +34,7 @@ spec:
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
           - "--jsonrpc-hosts=all"
+          - "--jsonrpc-cors=all"
           - "--reserved-peers=/morden_reserved.txt"
           - "--no-serve-light" 
           - "--max-peers=250" 
