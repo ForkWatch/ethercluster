@@ -36,7 +36,6 @@ spec:
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
           - "--jsonrpc-cors=all"
           - "--jsonrpc-hosts=all"
-          - "--no-ancient-blocks"
           - "--no-serve-light"
           - "--max-peers=250"
           - "--snapshot-peers=50"
