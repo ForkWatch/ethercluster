@@ -21,7 +21,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "parity/parity:v2.5.3-beta"
+          image: "parity/parity:v2.5.6-stable"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
