@@ -1,0 +1,64 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: nazgul-mgeth 
+  namespace: ethercluster
+  labels:
+    app: nazgul
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nazgul
+  serviceName: nazgul
+  template:
+    metadata:
+      name: nazgul-mgeth
+      labels:
+        app: nazgul
+    spec:
+      containers:
+        - name: mgeth
+          image: "multigeth/multi-geth:latest"
+          imagePullPolicy: Always
+          args: ["--chain.spec", "/nazgul-mgeth-config/parity.json", "--nat", "extip:35.192.211.157"]
+          ports:
+            - containerPort: 8545
+              protocol: TCP
+              name: rpc-port
+          volumeMounts:
+            - name: nazgul-mgeth-config
+              mountPath: /nazgul-mgeth-config
+              readOnly: true
+            - name: nazgul-mgeth-data
+              mountPath: /nazgul-mgeth-data
+        - name: ethnetintel
+          image: kairen/ethnetintel
+          env:
+          - name: NAME_PREFIX
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: WS_SERVER
+            value: "classic-stats.default.svc.cluster.local:3000"
+          - name: WS_SECRET
+            value: "12qw34er"
+          - name: RPC_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: RPC_PORT
+            value: "8545"
+      volumes:
+      - name: nazgul-mgeth-config
+        secret:
+          secretName: nazgul-mgeth-config
+  volumeClaimTemplates:
+    - metadata:
+        name: nazgul-mgeth-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "nazgul-mgeth-ssd"
+        resources:
+          requests:
+            storage: 80Gi
