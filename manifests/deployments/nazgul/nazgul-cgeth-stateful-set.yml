@@ -1,0 +1,66 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: nazgul-cgeth 
+  namespace: ethercluster
+  labels:
+    app: nazgul
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nazgul
+  serviceName: nazgul
+  template:
+    metadata:
+      name: nazgul-cgeth
+      labels:
+        app: nazgul
+    spec:
+      containers:
+        - name: cgeth
+          image: "etccoop/classic-geth:latest"
+          imagePullPolicy: Always
+          args:
+          - "--chain=/nazgul-cgeth-config/gethc.json"
+          - "--nat=extip:35.192.211.157"
+          ports:
+            - containerPort: 8545
+              protocol: TCP
+              name: rpc-port
+          volumeMounts:
+            - name: nazgul-cgeth-config
+              mountPath: /nazgul-cgeth-config
+              readOnly: true
+            - name: nazgul-cgeth-data
+              mountPath: /nazgul-cgeth-data
+        - name: ethnetintel
+          image: kairen/ethnetintel
+          env:
+          - name: NAME_PREFIX
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: WS_SERVER
+            value: "classic-stats.default.svc.cluster.local:3000"
+          - name: WS_SECRET
+            value: "12qw34er"
+          - name: RPC_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: RPC_PORT
+            value: "8545"
+      volumes:
+      - name: nazgul-cgeth-config
+        secret:
+          secretName: nazgul-cgeth-config
+    volumeClaimTemplates:
+    - metadata:
+        name: nazgul-cgeth-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "nazgul-cgeth-ssd"
+        resources:
+          requests:
+            storage: 80Gi
