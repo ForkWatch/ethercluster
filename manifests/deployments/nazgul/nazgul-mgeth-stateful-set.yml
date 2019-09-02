@@ -21,7 +21,10 @@ spec:
         - name: mgeth
           image: "multigeth/multi-geth:latest"
           imagePullPolicy: Always
-          args: ["--chain.spec", "/nazgul-mgeth-config/parity.json", "--nat", "extip:35.192.211.157"]
+          args:
+          - "--datadir=/nazgul-mgeth-data"
+          - "--nat=extip:35.192.211.157"
+          - "--networkid=88"
           ports:
             - containerPort: 8545
               protocol: TCP
@@ -53,6 +56,18 @@ spec:
       - name: nazgul-mgeth-config
         secret:
           secretName: nazgul-mgeth-config
+      initContainers:
+      - name: init-nazgul
+        image: "multigeth/multi-geth:latest" 
+        args:
+        - "init"
+        - "--datadir=/nazgul-mgeth-data"
+        - "/nazgul-mgeth-config/mgeth.json"
+        volumeMounts:
+        - name: nazgul-mgeth-data
+          mountPath: /nazgul-mgeth-data
+        - name: nazgul-mgeth-config
+          mountPath: /nazgul-mgeth-config
   volumeClaimTemplates:
     - metadata:
         name: nazgul-mgeth-data
