@@ -1,0 +1,103 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: classic-metamask 
+  namespace: ethercluster
+  labels:
+    app: classic-metamask
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:
+      app: classic-metamask
+  serviceName: classic-metamask
+  template:
+    metadata:
+      name: classic-metamask
+      labels:
+        app: classic-metamask
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: parity
+          image: "parity/parity:v2.5.6-stable"
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+          args:
+          - "--chain=classic"
+          - "--base-path=/classic-metamask-data"
+          - "--db-path=/classic-metamask-data/chains" 
+          - "--keys-path=/classic-metamask-data/keys"
+          - "--jsonrpc-port=8545"
+          - "--jsonrpc-interface=all"
+          - "--jsonrpc-apis=safe"
+          - "--jsonrpc-hosts=all"
+          - "--jsonrpc-cors=all"
+          - "--jsonrpc-server-threads=10"
+          - "--jsonrpc-threads=10"
+          - "--no-serve-light" 
+          - "--max-peers=250" 
+          - "--snapshot-peers=50"
+          - "--ws-interface=all"
+          - "--ws-apis=safe"
+          - "--ws-origins=all"
+          - "--ws-hosts=all"
+          - "--ws-port=8546"
+          - "--cache-size=1024"
+          - "--mode=active"
+          - "--mode-timeout=300"
+          - "--mode-alarm=3600"
+          ports:
+            - containerPort: 8545
+              protocol: TCP
+              name: rpc-port
+            - containerPort: 8546
+              protocol: TCP
+              name: ws-port
+            - containerPort: 443
+              protocol: TCP
+              name: https
+          #readinessProbe:
+          #  httpGet:
+          #    port: 8545
+          #    path: /api/health
+          #  initialDelaySeconds: 9000 
+          #  periodSeconds: 1800
+          #livenessProbe:
+          #  httpGet:
+          #    port: 8545
+          #    path: /api/health
+          #  initialDelaySeconds: 9000
+          #  periodSeconds: 1800
+          volumeMounts:
+            - name: classic-metamask-data
+              mountPath: /classic-metamask-data
+        - name: ethnetintel
+          image: kairen/ethnetintel
+          env:
+          - name: NAME_PREFIX
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: WS_SERVER
+            #value: classic-stats.dcp 
+            value: "classic-stats.default.svc.cluster.local:3000"
+          - name: WS_SECRET
+            value: "12qw34er"
+          - name: RPC_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: RPC_PORT
+            value: "8545"
+  volumeClaimTemplates:
+    - metadata:
+        name: classic-metamask-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "classic-metamask-ssd"
+        resources:
+          requests:
+            storage: 80Gi

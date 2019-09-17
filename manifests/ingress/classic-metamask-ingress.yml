@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: ingress-etc-metamask
+    namespace: ethercluster
+    annotations:
+        kubernetes.io/ingress.global-static-ip-name: ethercluster-metamask-address
+        kubernetes.io/ingress.allow-http: "false"
+        #kubernetes.io/ingress.class: "gce"
+        nginx.org/websocket-services: "ws-svc"
+        ingress.kubernetes.io/enable-ssl-chain-completion: "false"
+spec:
+    tls:
+      - hosts: 
+        - www.eth-classic-rpc.com
+        secretName: tls-classic-metamask
+    backend:
+      serviceName: classic-metamask
+      servicePort: 8545
+    rules:
+    - host: www.eth-classic-rpc.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: classic-metamask
+            servicePort: 8545
