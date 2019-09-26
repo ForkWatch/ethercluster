@@ -36,6 +36,14 @@ spec:
           backend:
             serviceName: morden
             servicePort: 8545
+        - path: /eth
+          backend:
+            serviceName: ethereum
+            servicePort: 8545
+        - path: /goerli
+          backend:
+            serviceName: goerli
+            servicePort: 8545
         - path: /etc-stats
           backend:
             serviceName: classic-stats

@@ -1,0 +1,98 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: goerli 
+  namespace: ethercluster 
+  labels:
+    app: goerli
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: goerli
+  serviceName: goerli
+  template:
+    metadata:
+      name: goerli
+      labels:
+        app: goerli
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: parity
+          image: "parity/parity:v2.5.6-stable"
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+          args:
+          - "--chain=goerli"
+          - "--base-path=/goerli-data"
+          - "--db-path=/goerli-data/chains" 
+          - "--keys-path=/goerli-data/keys"
+          - "--jsonrpc-port=8545"
+          - "--jsonrpc-interface=0.0.0.0"
+          - "--jsonrpc-apis=web3,eth,net,rpc,parity"
+          - "--jsonrpc-hosts=all"
+          - "--jsonrpc-cors=all"
+          - "--ws-interface=0.0.0.0" 
+          - "--ws-apis=web3,eth,net,rpc,parity"
+          - "--ws-origins=all" 
+          - "--ws-hosts=all"
+          - "--ws-port=8546"
+          ports:
+            - containerPort: 8545
+              protocol: TCP
+              name: rpc-port
+            - containerPort: 8546
+              protocol: TCP
+              name: ws-port
+            - containerPort: 443
+              protocol: TCP
+              name: https
+          readinessProbe:
+            httpGet:
+              port: 8545
+              path: /api/health
+            initialDelaySeconds: 1800
+            periodSeconds: 60
+          livenessProbe:
+            httpGet:
+              port: 8545
+              path: /api/health
+            initialDelaySeconds: 1800
+            periodSeconds: 60
+          volumeMounts:
+            - name: goerli-data
+              mountPath: /goerli-data
+        - name: ethnetintel
+          image: etccoop/ethnetintel
+          env:
+          - name: NAME_PREFIX
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: WS_SERVER
+            value: goerli-stats.dcp 
+          - name: WS_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: goerli-stats
+                key: WS_SECRET
+          - name: RPC_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: RPC_PORT
+            value: "8545"
+      volumes:
+      - name: goerli-data
+  volumeClaimTemplates:
+    - metadata:
+        name: goerli-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "goerli-ssd"
+        resources:
+          requests:
+            storage: 30Gi
