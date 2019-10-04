@@ -8,6 +8,7 @@ metadata:
         kubernetes.io/ingress.allow-http: "false"
         kubernetes.io/ingress.class: "gce"
         nginx.org/websocket-services: "ws-svc"
+        ingress.kubernetes.io/enable-cors: "true"
 spec:
     tls:
       - hosts:
