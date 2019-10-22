@@ -37,6 +37,7 @@ spec:
           - "--jsonrpc-cors=all"
           - "--jsonrpc-hosts=all"
           - "--no-serve-light"
+          - "--no-warp"
           - "--max-peers=250"
           - "--snapshot-peers=50"
           - "--ws-interface=0.0.0.0"
