@@ -1,43 +1,43 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: morden 
+  name: mordor-parity-rpc 
   namespace: ethercluster
   labels:
-    app: morden
+    app: mordor-parity-rpc
 spec:
-  replicas: 2
+  replicas: 2 
   selector:
     matchLabels:
-      app: morden
-  serviceName: morden
+      app: mordor-parity-rpc
+  serviceName: mordor-parity-rpc
   template:
     metadata:
-      name: morden
+      name: mordor-parity-rpc
       labels:
-        app: morden
+        app: mordor-parity-rpc
     spec:
       securityContext:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "etccoop/parity-morden:latest"
+          image: "parity/parity:v2.5.9-stable"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
           args:
-          - "--chain=morden"
-          - "--base-path=/morden-data"
-          - "--db-path=/morden-data/chains" 
-          - "--keys-path=/morden-data/keys"
+          - "--chain=/mordor-parity-rpc-config/parity-mordor.json"
+          - "--base-path=/mordor-parity-rpc-data"
+          - "--db-path=/mordor-parity-rpc-data/chains" 
+          - "--keys-path=/mordor-parity-rpc-data/keys"
+          - "--port=30000"
           - "--jsonrpc-port=8545"
           - "--jsonrpc-interface=0.0.0.0"
           - "--jsonrpc-apis=web3,eth,net,rpc,parity"
-          - "--jsonrpc-hosts=all"
           - "--jsonrpc-cors=all"
-          - "--reserved-peers=/morden_reserved.txt"
-          - "--no-serve-light" 
-          - "--max-peers=250" 
+          - "--jsonrpc-hosts=all"
+          - "--no-serve-light"
+          - "--max-peers=250"
           - "--snapshot-peers=50"
           - "--ws-interface=0.0.0.0"
           - "--ws-apis=web3,eth,net,rpc,parity"
@@ -45,7 +45,7 @@ spec:
           - "--ws-hosts=all"
           - "--ws-port=8546"
           ports:
-            - containerPort: 8545
+            - containerPort: 8545 
               protocol: TCP
               name: rpc-port
             - containerPort: 8546
@@ -54,21 +54,17 @@ spec:
             - containerPort: 443
               protocol: TCP
               name: https
-          readinessProbe:
-            httpGet:
-              port: 8545
-              path: /api/health
-            initialDelaySeconds: 9000 
-            periodSeconds: 1800
-          livenessProbe:
-            httpGet:
-              port: 8545
-              path: /api/health
-            initialDelaySeconds: 9000
-            periodSeconds: 1800
+          resources:
+            requests:
+              cpu: "500m"
+            limits:
+              cpu: "1000m"
           volumeMounts:
-            - name: morden-data
-              mountPath: /morden-data
+            - name: mordor-parity-rpc-config
+              mountPath: /mordor-parity-rpc-config
+              readOnly: true
+            - name: mordor-parity-rpc-data
+              mountPath: /mordor-parity-rpc-data
         - name: ethnetintel
           image: kairen/ethnetintel
           env:
@@ -77,12 +73,9 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
           - name: WS_SERVER
-            value: morden-stats.dcp 
+            value: mordor-stats.dcp
           - name: WS_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: morden-stats
-                key: WS_SECRET
+            value: "12qw34er"
           - name: RPC_HOST
             valueFrom:
               fieldRef:
@@ -90,13 +83,15 @@ spec:
           - name: RPC_PORT
             value: "8545"
       volumes:
-      - name: morden-data
+      - name: mordor-parity-rpc-config
+        secret:
+          secretName: mordor-parity-rpc-config
   volumeClaimTemplates:
     - metadata:
-        name: morden-data
+        name: mordor-parity-rpc-data
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: "morden-ssd"
+        storageClassName: "mordor-parity-rpc-ssd"
         resources:
           requests:
-            storage: 30Gi
+            storage: 50Gi

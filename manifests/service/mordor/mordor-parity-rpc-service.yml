@@ -2,14 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: morden 
-  name: morden 
+    app: mordor-parity-rpc 
+  name: mordor-parity-rpc
   namespace: ethercluster
   annotations:
     cloud.google.com/app-protocols: '{"my-https-port":"HTTPS","my-http-port":"HTTP"}'
+    prometheus.io/scrape: 'true'
 spec:
   selector:
-    app: morden 
+    app: mordor-parity-rpc
   ports:
   - name: default
     protocol: TCP
@@ -18,9 +19,9 @@ spec:
   - name: rpc-endpoint
     port: 8545 
     protocol: TCP
-    targetPort: 8545
+    targetPort: 8545 
   - name: ws-endpoint
-    port: 8546 
+    port: 8546
     protocol: TCP
     targetPort: 8546
   - name: https
