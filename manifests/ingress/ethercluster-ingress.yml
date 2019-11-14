@@ -33,10 +33,6 @@ spec:
           backend:
             serviceName: kotti
             servicePort: 8545
-        - path: /morden
-          backend:
-            serviceName: morden
-            servicePort: 8545
 	- path: /mordor
           backend:
             serviceName: mordor-parity-rpc
@@ -57,10 +53,6 @@ spec:
           backend:
             serviceName: kotti-stats
             servicePort: 80
-        - path: /morden-stats
-          backend:
-            serviceName: morden-stats
-            servicePort: 80
         - path: /ws-etc
           backend:
             serviceName: classic
@@ -68,10 +60,6 @@ spec:
         - path: /ws-kotti
           backend:
             serviceName: kotti
-            servicePort: 8546
-        - path: /ws-morden
-          backend:
-            serviceName: morden
             servicePort: 8546
         - path: /ws-mordor
           backend:
