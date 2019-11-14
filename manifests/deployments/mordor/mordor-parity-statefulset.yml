@@ -4,18 +4,18 @@ metadata:
   name: mordor-parity 
   namespace: ethercluster
   labels:
-    app: mordor
+    app: mordor-parity
 spec:
   replicas: 2 
   selector:
     matchLabels:
-      app: mordor
-  serviceName: mordor
+      app: mordor-parity
+  serviceName: mordor-parity
   template:
     metadata:
       name: mordor-parity
       labels:
-        app: mordor
+        app: mordor-parity
     spec:
       securityContext:
         fsGroup: 1000

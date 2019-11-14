@@ -37,6 +37,10 @@ spec:
           backend:
             serviceName: morden
             servicePort: 8545
+	- path: /mordor
+          backend:
+            serviceName: mordor-parity-rpc
+            servicePort: 8545
         - path: /eth
           backend:
             serviceName: ethereum
@@ -68,4 +72,8 @@ spec:
         - path: /ws-morden
           backend:
             serviceName: morden
+            servicePort: 8546
+        - path: /ws-mordor
+          backend:
+            serviceName: mordor-parity-rpc
             servicePort: 8546
