@@ -65,3 +65,7 @@ spec:
           backend:
             serviceName: mordor-parity-rpc
             servicePort: 8546
+	- path: /ws-eth
+          backend:
+            serviceName: ethereum
+            servicePort: 8546
