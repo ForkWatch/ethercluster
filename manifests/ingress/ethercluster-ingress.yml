@@ -69,3 +69,7 @@ spec:
           backend:
             serviceName: morden
             servicePort: 8546
+	- path: /ws-eth
+          backend:
+            serviceName: ethereum
+            servicePort: 8546
