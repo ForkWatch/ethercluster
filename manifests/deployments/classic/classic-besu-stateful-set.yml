@@ -24,8 +24,7 @@ spec:
           args: 
           - "--network=classic"
           - "--data-path=/classic-besu-data"
-          #- "--db-path=/classic-besu-data/chains" 
-          #- "--keys-path=/classic-besu-data/keys"
+          - "--node-private-key-file=/classic-besu-data/keys"
           - "--rpc-http-enabled" 
           - "--rpc-ws-enabled"
           ports:
@@ -41,13 +40,13 @@ spec:
           readinessProbe:
             httpGet:
               port: 8545
-              path: /api/health
+              path: /readiness
             initialDelaySeconds: 9000 
             periodSeconds: 1800
           livenessProbe:
             tcpSocket:
               port: 8545
-              path: /api/health
+              path: /liveness
             initialDelaySeconds: 9000
             periodSeconds: 1800
           volumeMounts:
