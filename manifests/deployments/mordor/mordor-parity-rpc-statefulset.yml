@@ -21,12 +21,12 @@ spec:
         fsGroup: 1000
       containers:
         - name: parity
-          image: "parity/parity:v2.5.9-stable"
+          image: "parity/parity:v2.6.6-beta"
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1000
           args:
-          - "--chain=/mordor-parity-rpc-config/parity-mordor.json"
+          - "--chain=mordor"
           - "--base-path=/mordor-parity-rpc-data"
           - "--db-path=/mordor-parity-rpc-data/chains" 
           - "--keys-path=/mordor-parity-rpc-data/keys"
