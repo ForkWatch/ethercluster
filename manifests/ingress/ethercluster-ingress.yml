@@ -9,6 +9,7 @@ metadata:
         kubernetes.io/ingress.class: "gce"
         nginx.org/websocket-services: "ws-svc"
         ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/connection-proxy-header: "keep-alive"
 spec:
     tls:
       - hosts:
