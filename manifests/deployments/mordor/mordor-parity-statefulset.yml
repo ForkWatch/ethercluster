@@ -30,10 +30,9 @@ spec:
           - "--base-path=/mordor-parity-data"
           - "--db-path=/mordor-parity-data/chains" 
           - "--keys-path=/mordor-parity-data/keys"
-          - "--port=30000"
           - "--nat=extip:35.238.101.58"
           ports:
-            - containerPort: 30000 
+            - containerPort: 8545 
               protocol: TCP
               name: rpc-port
           resources:
